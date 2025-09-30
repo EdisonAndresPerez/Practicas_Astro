@@ -173,23 +173,23 @@ import AuthLayout from '../layouts/AuthLayout.astro'
   }
 </style>
 
-<script>
-  import { actions } from 'astro:actions'
+<script type="module">
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    const btnSubmit = document.querySelector('#btn-submit');
 
-  const form = document.querySelector('form') as HTMLFormElement
-  const btnSubmit = document.querySelector('#btn-submit') as HTMLButtonElement
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      btnSubmit.setAttribute('disabled', 'disabled');
 
-  form.addEventListener('submit', async e => {
-    e.preventDefault()
-    btnSubmit.setAttribute('disabled', 'disabled')
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        data[key] = value;
+      });
+      console.log('Datos del formulario:', data);
 
-    const formData = new FormData(form)
-    const { data, error } = await actions.register(formData)
-
-    if (error) {
-      console.log(error.message)
-    }
-
-    btnSubmit.removeAttribute('disabled')
-  })
+      btnSubmit.removeAttribute('disabled');
+    });
+  });
 </script>
