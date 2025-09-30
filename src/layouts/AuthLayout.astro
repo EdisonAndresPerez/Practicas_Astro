@@ -1,0 +1,43 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  title?: string
+}
+const { title = 'Auth - login' } = Astro.props
+---
+
+<!doctype html>
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width' />
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class='min-h-screen flex'>
+      <div
+        class='hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800'
+      >
+        <img
+          src='/juego-patrones-fisuras_118813-11742.jpg'
+          alt='Login background'
+          class='absolute inset-0 w-full h-full object-cover opacity-40'
+        />
+        <div
+          class='relative z-10 flex flex-col justify-center px-16 text-white'
+        >
+          <h2 class='text-5xl font-bold mb-4 leading-tight'>
+            Bienvenido de vuelta
+          </h2>
+          <p class='text-xl text-slate-300 leading-relaxed'>
+            Accede a tu cuenta para continuar con tu experiencia
+          </p>
+        </div>
+      </div>
+      <slot />
+    </div>
+
+  </body>
+</html>
