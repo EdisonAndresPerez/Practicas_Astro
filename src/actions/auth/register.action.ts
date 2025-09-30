@@ -1,5 +1,7 @@
 import { defineAction } from 'astro:actions'
 import { z } from 'astro:schema'
+import admin from 'firebase-admin'
+
 
 export const register = defineAction({
   accept: 'form',
