@@ -186,21 +186,67 @@ import AuthLayout from '../layouts/AuthLayout.astro'
 </style>
 
 <script>
+  import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+  import { firebase } from '../firebase/config'
   import { actions } from 'astro:actions'
 
   const form = document.querySelector('form') as HTMLFormElement
   const btnSubmit = document.querySelector('#btn-submit') as HTMLButtonElement
+  const auth = firebase.auth
 
   form.addEventListener('submit', async e => {
     e.preventDefault()
     btnSubmit.setAttribute('disabled', 'disabled')
+    btnSubmit.textContent = 'Creando cuenta...'
 
     const formData = new FormData(form)
+    
+    // Primero validamos con Astro Actions
     const { data, error } = await actions.register(formData)
+    
     if (error) {
-      console.log(error.message)
+      console.log('Error de validación:', error.message)
+      btnSubmit.removeAttribute('disabled')
+      btnSubmit.textContent = 'Crear Cuenta'
+      return
+    }
+
+    // Si la validación es exitosa, creamos el usuario con Firebase
+    try {
+      const email = formData.get('email') as string
+      const password = formData.get('password') as string
+      const name = formData.get('name') as string
+      const lastName = formData.get('lastName') as string
+
+      // Crear usuario en Firebase
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const user = userCredential.user
+
+      // Actualizar el perfil con nombre y apellido
+      await updateProfile(user, {
+        displayName: `${name} ${lastName}`
+      })
+
+      console.log('Usuario creado exitosamente:', user)
+      alert('¡Cuenta creada exitosamente!')
+      
+      // Redirigir al login o dashboard
+      // window.location.href = '/login'
+      
+    } catch (firebaseError) {
+      console.error('Error de Firebase:', firebaseError)
+      
+      let errorMessage = 'Error al crear la cuenta'
+      if (firebaseError.code === 'auth/email-already-in-use') {
+        errorMessage = 'Este correo ya está registrado'
+      } else if (firebaseError.code === 'auth/weak-password') {
+        errorMessage = 'La contraseña es muy débil'
+      }
+      
+      alert(errorMessage)
     }
 
     btnSubmit.removeAttribute('disabled')
+    btnSubmit.textContent = 'Crear Cuenta'
   })
 </script>
