@@ -9,14 +9,13 @@ export default function LoginGithubButton() {
         console.log("Usuario de GitHub:", result.user);
         alert(`¡Bienvenido ${result.user.displayName}!`);
         // Aquí puedes redirigir o hacer lo que necesites después del login
-        // window.location.href = '/dashboard';
+         window.location.href = '/';
       })
       .catch((error) => {
         console.error("Error al iniciar sesión con GitHub:", error);
         alert("Error al iniciar sesión con GitHub");
       });
   }
-
   return (
     <button
       onClick={loginWithGithub}
